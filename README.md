@@ -3,7 +3,7 @@ CipherAPI
 
 Decrypt Youtube cipher signatures
 
-Home: http://gitnol.com/CipherAPI/
+Home: http://gitnol.com/cipherapi/
 
 CipherAPI is the service to deliver algorithm required to decrypt Youtube cipher signatures.
 It is open for any type of public use. You can easily fetch the latest algo to decode the ciphered signature by making a GET call.
@@ -22,12 +22,12 @@ Algo are provided in two forms by this API:
         
     Usage:
     
-    	  URL: http://www.gitnol.com/CipherAPI/getAlgo.php
+    	  URL: http://www.gitnol.com/cipherapi/getAlgo.php
     	  
     	  Required params: 
 		        playerID	
 	
-	      i.e. http://www.gitnol.com/CipherAPI/getAlgo.php?playerID=en_US-vflz7mN60
+	      i.e. http://www.gitnol.com/cipherapi/getAlgo.php?playerID=en_US-vflz7mN60
 	
 2. Just the Algo in simple form:
 
@@ -35,12 +35,12 @@ Algo are provided in two forms by this API:
 	
     Usage:
     
-        URL: http://www.gitnol.com/CipherAPI/getAlgo.php
+        URL: http://www.gitnol.com/cipherapi/getAlgo.php
 	      
 	      Required params: 
 		        playerID
 		        sigformat
 	
-	      i.e. http://www.gitnol.com/CipherAPI/getAlgo.php?playerID=en_US-vflz7mN60&sigformat=42.40
+	      i.e. http://www.gitnol.com/cipherapi/getAlgo.php?playerID=en_US-vflz7mN60&sigformat=42.40
 
 Note: It's in beta stage.
