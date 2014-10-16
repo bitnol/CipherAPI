@@ -16,7 +16,7 @@
 	$info_url = "http://www.youtube.com/get_video_info?el=detailpage&asv=3&video_id=".$video_id;
 	
 	// youtube webpage url formation
-	$yt_url = 'http://www.youtube.com/watch?v='.$video_id.'&gl=US';
+	$yt_url = 'http://www.youtube.com/watch?v='.$video_id.'&gl=US&persist_gl=1&hl=en&persist_hl=1';;
 
 	// get the contents from the url
 	$raw_data = file_get_contents($info_url);
