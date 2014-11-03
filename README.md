@@ -44,3 +44,5 @@ Algo are provided in two forms by this API:
 	      i.e. http://api.gitnol.com/getAlgo.php?playerID=en_US-vflz7mN60&sigformat=42.40
 
 Note: It's in beta stage.
+
+Any queries? please contact me here: akhilesh [at] bitnol.com
