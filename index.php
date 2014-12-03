@@ -123,7 +123,7 @@
 	
 	// signature decoding 
 	// parse the python string operation into php string operation
-	function decrypt($sig,$algo){
+	function decrypt($sig, $algo){			
 		$funcarr = explode(' + ', $algo);
 		$decrypt = '';
 		foreach($funcarr as $singfunc){
@@ -147,10 +147,10 @@
 				if($operators[0] == '' && $operators[1] == ''){
 					$decrypt .= strrev($sig);
 				}
-				if($operators[0] >=0 && $operators[1] == ''){
+				if($operators[0] >=0 && $operators[1] == '' && $operators[0] != ''){
 					$decrypt .= strrev(substr($sig, 0, $operators[0] + 1));
 				}
-				if($operators[0] >=0 && $operators[1] >= 0){
+				if($operators[0] >=0 && $operators[1] >= 0 && $operators[0] != '' && $operators[1] != ''){
 					$decrypt .= strrev(substr($sig, $operators[1] + 1, $operators[0] - $operators[1]));
 				}
 			}
