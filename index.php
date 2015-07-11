@@ -8,12 +8,19 @@
  * License: MIT License
  */
 
-	// Video with cipher signature 
-	$video_id = "zDrNLZ1uJ2w";
+	// Youtube Video ID 	
+	if(isset($_GET['id']) && $_GET['id'] != ""){
+		$video_id = $_GET['id'];
+	}else{
+		echo 'video id not provided';
+		exit;
+	}
 
+	$CipherAPIkey = "Enter your Cipher apikey here";
+	
 	// get_video_info url formation
 	// although for cipher signature we have to get the details from the video's webapge not from get_video_info object
-	$info_url = "http://www.youtube.com/get_video_info?el=detailpage&asv=3&video_id=".$video_id;
+	$info_url = "http://www.youtube.com/get_video_info?video_id=".$video_id."&el=vevo&el=embedded&hl=en_US";
 	
 	// youtube webpage url formation
 	$yt_url = 'http://www.youtube.com/watch?v='.$video_id.'&gl=US&persist_gl=1&hl=en&persist_hl=1';;
@@ -31,9 +38,6 @@
 		// check for the cipher signature
 		$cipher = (isset($output['use_cipher_signature']) &&  $output['use_cipher_signature']=='True') ? true : false;
 
-		// If cipher is true then we have to decode it
-		if($cipher == true){
-			
 			// if cipher is true then we have to change the plan and get the details from the video's youtube wbe page
 			$yt_html = file_get_contents($yt_url);
 			
@@ -61,7 +65,7 @@
 					$algos = json_decode(file_get_contents('algo.json'),true);
 				else{
 					// API call to fetch the algo dictionary
-					$algos_dict = file_get_contents("http://api.gitnol.com/getAlgo.php?playerID=".$player_id);
+					$algos_dict = file_get_contents("http://api.gitnol.com/getAlgo.php?playerID=".$player_id."&apikey=".$CipherAPIkey);
 					
 					// saving the algo dictonary in local env for easy access
 					// Note: Developers should save the dictionary in their local env. 
@@ -76,7 +80,7 @@
 				if(!array_key_exists($player_id, $algos)){
 					
 					// if the algo dictionary is old then fetch a new one
-					$algos_dict = file_get_contents("http://api.gitnol.com/getAlgo.php?playerID=".$player_id);
+					$algos_dict = file_get_contents("http://api.gitnol.com/getAlgo.php?playerID=".$player_id."&apikey=".$CipherAPIkey);
 					file_put_contents('algo.json', $algos_dict);
 					
 					$algos = json_decode($algos_dict,true);
@@ -85,8 +89,11 @@
 				}else{
 					$algo = $algos[$player_id][1];
 				}
-				
-				echo 'Algo Used: '.$algo.'<br /><hr />';
+				if($cipher){
+					echo 'Algo Used: '.$algo.'<br /><hr />';
+				} else {
+					echo 'Non-Cipher<br /><hr />';
+				}				
 							
 				// download links formation
 				$dlinks = array();
@@ -96,17 +103,21 @@
 				
 				foreach ($links as $link) {
 					parse_str($link,$linkarr);
-					
 					// parse link array one by one and decrypt the signature
-					$dlinks[$linkarr['itag']] = $linkarr['url'] . "&signature=" . decrypt($linkarr['s'],$algo);
+					// If cipher is true then we have to decode it
+					if($cipher){
+						$dlinks[$linkarr['itag']] = $linkarr['url'] . "&signature=" . decrypt($linkarr['s'],$algo);
+					}else{
+						if(!isset($linkarr['sig']) || !isset($linkarr['s']))
+							$dlinks[$linkarr['itag']] = $linkarr['url'];
+						else
+							$dlinks[$linkarr['itag']] = $linkarr['url'] . "&signature=" . isset($linkarr['s']) ? $linkarr['s'] : $linkarr['sig'];
+					}					
 					echo $linkarr['itag'].'<br />';
 					echo $dlinks[$linkarr['itag']].'<br /><br />';
 				}
 				echo '<hr />';
-			}
-		}else{
-			echo 'Video Is not cipher not needed to decode';
-		}
+			}		
 	}else{
 		echo 'Unable to get Video Info';
 	}
