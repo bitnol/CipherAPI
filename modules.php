@@ -84,7 +84,7 @@
 					if(!array_key_exists($player_id, $algos)){
 						
 						// if the algo dictionary is old then fetch a new one
-						$algos_dict = file_get_contents("http://api.gitnol.com/getAlgo.php?playerID=".$player_id."&apikey=".$CipherAPIkey);
+						$algos_dict = file_get_contents("http://api.gitnol.com/v4/getAlgo.php?playerID=".$player_id."&apikey=".$CipherAPIkey);
 						file_put_contents('algo.json', $algos_dict);
 						
 						$algos = json_decode($algos_dict,true);
@@ -132,39 +132,11 @@
 	}
 	
 	// signature decoding 
-	// parse the python string operation into php string operation
-	function decrypt($sig, $algo){			
-		$funcarr = explode(' + ', $algo);
-		$decrypt = '';
-		foreach($funcarr as $singfunc){
-			$singfunc = substr($singfunc,2,-1);
-			$operators = explode(':', $singfunc);
-			if (sizeof($operators) == 1) {
-				$decrypt .= $sig[$operators[0]];
-			}
-			if (sizeof($operators) == 2) {
-				if($operators[0] == ''){
-					$decrypt .= substr($sig, 0 ,$operators[1]);
-				}
-				if($operators[1] == ''){
-					$decrypt .= substr($sig, $operators[0]);
-				}
-				if($operators[0] >= 0 && $operators[1] >= 0){
-					$decrypt .= substr($sig, $operators[0], $operators[1] - $operators[0]);
-				}
-			}
-			if (sizeof($operators) == 3) {
-				if($operators[0] == '' && $operators[1] == ''){
-					$decrypt .= strrev($sig);
-				}
-				if($operators[0] >=0 && $operators[1] == '' && $operators[0] != ''){
-					$decrypt .= strrev(substr($sig, 0, $operators[0] + 1));
-				}
-				if($operators[0] >=0 && $operators[1] >= 0 && $operators[0] != '' && $operators[1] != ''){
-					$decrypt .= strrev(substr($sig, $operators[1] + 1, $operators[0] - $operators[1]));
-				}
-			}
+	function decrypt($sig, $algo){
+		$dsig = '';
+		foreach($algo as $key => $value){
+			$dsig .= $sig[$value];
 		}
-		return $decrypt;
+		return $dsig;
 	}
 ?>
