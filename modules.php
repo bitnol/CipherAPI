@@ -69,7 +69,7 @@
 						$algos = json_decode(file_get_contents('algo.json'),true);
 					else{
 						// API call to fetch the algo dictionary
-						$algos_dict = file_get_contents("http://api.gitnol.com/getAlgo.php?playerID=".$player_id."&apikey=".$CipherAPIkey);
+						$algos_dict = file_get_contents("http://api.gitnol.com/v4/getAlgo.php?playerID=".$player_id."&apikey=".$CipherAPIkey);
 						
 						// saving the algo dictonary in local env for easy access
 						// Note: Developers should save the dictionary in their local env. 
